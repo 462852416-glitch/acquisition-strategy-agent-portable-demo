@@ -1,0 +1,376 @@
+{
+  "agent_name": "Acquisition strategy agent（target perspective ）",
+  "perspective": "target",
+  "purpose": "Evaluate an acquisition proposal from the target company's and target shareholders' perspective, producing a recommendation on accept, reject, negotiate, run a market check, or pursue alternatives.",
+  "mode": "multi_step_llm_planner_with_iterative_tool_use",
+  "input_schema": {
+    "required": [
+      "target_name_or_profile",
+      "buyer_name_or_profile",
+      "offer_or_transaction_context"
+    ],
+    "optional": [
+      "offer_price",
+      "consideration_type",
+      "target_financials",
+      "target_business_plan",
+      "shareholder_base",
+      "board_constraints",
+      "strategic_alternatives",
+      "market_check_status",
+      "uploaded_documents",
+      "regulatory_constraints",
+      "timeline"
+    ]
+  },
+  "clarification_questions": [
+    "What exactly has the buyer offered: price, consideration, stake, conditions, timing, exclusivity, financing?",
+    "Is the offer friendly, unsolicited, hostile, indicative, binding, or non-binding?",
+    "What is the target board/shareholder objective: maximize immediate cash value, preserve upside, protect stakeholders, maintain independence, or find a superior buyer?",
+    "What standalone plan and forecasts are available for the target?",
+    "Has the target already run a market check or received alternative interest?"
+  ],
+  "workflow": [
+    {
+      "step_id": "T1",
+      "name": "Transaction / Offer Context",
+      "objective": "Understand the buyer's offer, conditions, and transaction environment.",
+      "tools": [
+        "document_parser",
+        "offer_term_extractor",
+        "web_search",
+        "filing_retriever"
+      ],
+      "analysis_tasks": [
+        "Extract offer price, consideration mix, target ownership percentage, structure, conditions, exclusivity, timeline.",
+        "Classify offer status: preliminary, binding, unsolicited, negotiated, hostile, competitive auction, management buyout.",
+        "Identify target board's immediate decision question."
+      ],
+      "outputs": [
+        "offer_summary",
+        "transaction_timeline",
+        "decision_question"
+      ]
+    },
+    {
+      "step_id": "T2",
+      "name": "Target Shareholder Objective",
+      "objective": "Define target-side decision criteria from shareholder and board perspective.",
+      "tools": [
+        "stakeholder_mapper",
+        "fiduciary_decision_framework",
+        "llm_reasoner"
+      ],
+      "analysis_tasks": [
+        "Identify shareholder priorities: certainty of value, upside participation, liquidity, tax, timing, governance, stakeholder protection.",
+        "Map board duties and stakeholder constraints.",
+        "Set acceptance thresholds and negotiation objectives."
+      ],
+      "outputs": [
+        "shareholder_objective_map",
+        "board_decision_criteria",
+        "acceptance_thresholds"
+      ]
+    },
+    {
+      "step_id": "T3",
+      "name": "Standalone Case",
+      "objective": "Estimate what target shareholders own if they do not sell.",
+      "tools": [
+        "financial_model",
+        "forecast_engine",
+        "strategy_plan_analyzer",
+        "sensitivity_model"
+      ],
+      "analysis_tasks": [
+        "Analyze historical performance and standalone strategic plan.",
+        "Build base/upside/downside standalone projections.",
+        "Identify execution risks and required capital to achieve standalone plan."
+      ],
+      "outputs": [
+        "standalone_financial_case",
+        "standalone_value_drivers",
+        "standalone_risk_factors"
+      ]
+    },
+    {
+      "step_id": "T4",
+      "name": "Offer Attractiveness",
+      "objective": "Assess headline and real attractiveness of the buyer's offer.",
+      "tools": [
+        "offer_value_calculator",
+        "consideration_risk_model",
+        "premium_analysis"
+      ],
+      "analysis_tasks": [
+        "Calculate offer premium to unaffected price, VWAP, historical trading ranges, analyst targets where applicable.",
+        "Adjust offer value for consideration risk: stock volatility, collars, earnouts, contingent consideration, escrow, tax leakage.",
+        "Compare offer value to standalone expected value and risk-adjusted alternatives."
+      ],
+      "outputs": [
+        "offer_value_analysis",
+        "premium_analysis",
+        "real_value_after_risk_adjustments"
+      ]
+    },
+    {
+      "step_id": "T5",
+      "name": "Valuation Fairness",
+      "objective": "Determine whether the offer is financially fair to target shareholders.",
+      "tools": [
+        "dcf_model",
+        "trading_comps",
+        "transaction_comps",
+        "sum_of_parts",
+        "fairness_range_model"
+      ],
+      "analysis_tasks": [
+        "Run DCF, comparable companies, precedent transactions, premium paid, and sum-of-parts if relevant.",
+        "Compare offer price against fairness range.",
+        "Identify valuation assumptions most favorable/unfavorable to accepting the offer."
+      ],
+      "outputs": [
+        "fair_value_range",
+        "fairness_assessment",
+        "valuation_sensitivity"
+      ]
+    },
+    {
+      "step_id": "T6",
+      "name": "Consideration & Control Premium",
+      "objective": "Assess whether shareholders are adequately compensated for selling control and future upside.",
+      "tools": [
+        "control_premium_database",
+        "consideration_mix_analyzer",
+        "tax_leakage_model"
+      ],
+      "analysis_tasks": [
+        "Analyze control premium relative to similar transactions.",
+        "Evaluate cash vs stock vs mixed consideration and whether target shareholders keep upside in combined company.",
+        "Assess tax, lock-up, liquidity, collar, exchange ratio, and downside protection terms."
+      ],
+      "outputs": [
+        "control_premium_assessment",
+        "consideration_quality_score",
+        "required_price_or_term_adjustments"
+      ]
+    },
+    {
+      "step_id": "T7",
+      "name": "Buyer Motivation & Strategic Need",
+      "objective": "Infer how much negotiating leverage target has based on buyer's strategic need.",
+      "tools": [
+        "buyer_strategy_analyzer",
+        "news_search",
+        "filing_retriever",
+        "synergy_inference_model"
+      ],
+      "analysis_tasks": [
+        "Identify buyer's strategic rationale and urgency.",
+        "Estimate buyer-specific synergies and ability to pay.",
+        "Assess buyer's alternatives and walk-away risk."
+      ],
+      "outputs": [
+        "buyer_motivation_assessment",
+        "buyer_ability_to_pay",
+        "target_negotiating_leverage"
+      ]
+    },
+    {
+      "step_id": "T8",
+      "name": "Strategic Alternatives",
+      "objective": "Evaluate alternatives available to the target instead of accepting current offer.",
+      "tools": [
+        "strategic_options_generator",
+        "capital_markets_screen",
+        "partnership_screen",
+        "scenario_engine"
+      ],
+      "analysis_tasks": [
+        "Evaluate remain independent, recapitalization, sale to alternative buyer, merger, JV/partnership, asset sale, spin-off, financing raise.",
+        "Compare value, timing, risk, stakeholder impact, and execution certainty of each alternative.",
+        "Identify credible alternatives to support negotiation."
+      ],
+      "outputs": [
+        "strategic_alternatives_matrix",
+        "best_alternative_to_transaction",
+        "alternative_value_ranges"
+      ]
+    },
+    {
+      "step_id": "T9",
+      "name": "Market Check / Auction Potential",
+      "objective": "Determine whether target should solicit or test other buyers.",
+      "tools": [
+        "buyer_universe_builder",
+        "auction_feasibility_model",
+        "market_check_tracker"
+      ],
+      "analysis_tasks": [
+        "Build potential buyer universe: strategic buyers, financial sponsors, sector consolidators, international buyers, SPAC/shell-related buyers if relevant.",
+        "Score potential buyers by strategic fit, ability to pay, regulatory risk, and likelihood of interest.",
+        "Recommend no-shop, go-shop, limited market check, full auction, or targeted outreach."
+      ],
+      "outputs": [
+        "potential_buyer_list",
+        "auction_strategy",
+        "market_check_recommendation"
+      ]
+    },
+    {
+      "step_id": "T10",
+      "name": "Deal Certainty",
+      "objective": "Assess probability the proposed transaction closes on agreed terms.",
+      "tools": [
+        "financing_certainty_checker",
+        "regulatory_screen",
+        "condition_analyzer",
+        "buyer_credit_analysis"
+      ],
+      "analysis_tasks": [
+        "Evaluate financing certainty, regulatory approvals, shareholder approvals, diligence conditions, MAC clauses, closing timeline.",
+        "Assess buyer credibility and ability to close.",
+        "Identify terms needed to improve certainty: reverse break fee, hell-or-high-water, limited conditions, escrow, financing commitments."
+      ],
+      "outputs": [
+        "deal_certainty_score",
+        "closing_risk_register",
+        "certainty_improvement_terms"
+      ]
+    },
+    {
+      "step_id": "T11",
+      "name": "Governance & Stakeholder Impact",
+      "objective": "Assess consequences for board, management, employees, customers, creditors, and other stakeholders.",
+      "tools": [
+        "stakeholder_impact_model",
+        "governance_review",
+        "employment_terms_analyzer"
+      ],
+      "analysis_tasks": [
+        "Evaluate board process, conflicts, management incentives, retention arrangements, related-party issues.",
+        "Assess impact on employees, customers, suppliers, creditors, regulators, community, and brand.",
+        "Recommend governance protections and stakeholder commitments."
+      ],
+      "outputs": [
+        "governance_risk_assessment",
+        "stakeholder_impact_summary",
+        "required_protections"
+      ]
+    },
+    {
+      "step_id": "T12",
+      "name": "Negotiation Strategy",
+      "objective": "Design target-side response and negotiation plan.",
+      "tools": [
+        "negotiation_playbook",
+        "counteroffer_model",
+        "term_sheet_redliner"
+      ],
+      "analysis_tasks": [
+        "Set target ask: price, consideration mix, certainty terms, go-shop/no-shop, break fees, employee/customer protections.",
+        "Define response path: reject, counter, request improved terms, run market check, engage under NDA, form special committee.",
+        "Prepare negotiation leverage points based on buyer need, alternatives, and valuation gap."
+      ],
+      "outputs": [
+        "negotiation_strategy",
+        "counteroffer_terms",
+        "board_response_draft"
+      ]
+    },
+    {
+      "step_id": "T13",
+      "name": "Accept vs Reject Scenario Analysis",
+      "objective": "Compare outcomes under accepting, negotiating, rejecting, or seeking alternatives.",
+      "tools": [
+        "scenario_engine",
+        "shareholder_value_model",
+        "risk_weighted_decision_tree"
+      ],
+      "analysis_tasks": [
+        "Model accept current offer, accept improved offer, reject and remain independent, run auction, pursue alternative transaction.",
+        "Estimate shareholder value, certainty, timing, downside risk, and strategic impact for each scenario.",
+        "Define trigger points that change recommendation."
+      ],
+      "outputs": [
+        "scenario_comparison",
+        "decision_tree",
+        "trigger_points"
+      ]
+    },
+    {
+      "step_id": "T14",
+      "name": "Recommendation",
+      "objective": "Produce target-side acquisition strategy recommendation.",
+      "tools": [
+        "llm_report_writer",
+        "evidence_citation_manager",
+        "executive_summary_generator"
+      ],
+      "analysis_tasks": [
+        "Synthesize target-side analysis into accept / reject / negotiate / market check / pursue alternatives recommendation.",
+        "State required improvements to price, terms, certainty, governance protections, and process.",
+        "Provide confidence score, key assumptions, and unresolved diligence items."
+      ],
+      "outputs": [
+        "target_acquisition_strategy_report"
+      ]
+    }
+  ],
+  "output_schema": {
+    "report_title": "Target Perspective Acquisition Strategy Report",
+    "sections": [
+      "Executive Recommendation",
+      "Transaction / Offer Context",
+      "Target Shareholder Objectives",
+      "Standalone Case",
+      "Offer Attractiveness",
+      "Valuation Fairness",
+      "Consideration and Control Premium",
+      "Buyer Motivation and Strategic Need",
+      "Strategic Alternatives",
+      "Market Check / Auction Potential",
+      "Deal Certainty",
+      "Governance and Stakeholder Impact",
+      "Negotiation Strategy",
+      "Accept vs Reject Scenario Analysis",
+      "Board Next Steps",
+      "Appendix: Evidence, Assumptions, Data Gaps"
+    ]
+  },
+  "decision_logic": {
+    "recommend_accept_if": [
+      "offer_value >= upper_half_of_fairness_range",
+      "premium_attractive_vs_precedents",
+      "deal_certainty_score >= 70",
+      "standalone_case_risk_adjusted_value_below_offer",
+      "no_superior_alternative_likely"
+    ],
+    "recommend_negotiate_if": [
+      "offer_within_fairness_range_but_terms_weak",
+      "buyer_has_high_strategic_need_or_ability_to_pay",
+      "deal_certainty_can_be_improved_through_terms",
+      "control_premium_below_comparable_range"
+    ],
+    "recommend_market_check_if": [
+      "credible_alternative_buyers_exist",
+      "offer_below_fairness_range_or_low_premium",
+      "fiduciary_process_requires_price_discovery",
+      "buyer_demands_exclusivity_without_sufficient_value"
+    ],
+    "recommend_reject_if": [
+      "offer_below_fairness_range",
+      "standalone_or_alternative_value_materially_higher",
+      "deal_certainty_low_and_terms_do_not_protect_target",
+      "stakeholder_or_governance_risks_unacceptable"
+    ]
+  },
+  "guardrails": [
+    "Do not fabricate offer terms, financials, or buyer intentions; mark unknowns clearly.",
+    "Separate target shareholder value analysis from stakeholder impact analysis.",
+    "Make fiduciary/process observations as analytical flags, not legal advice.",
+    "Cite source for all public-data claims when implemented with search/filing tools.",
+    "If offer details are missing, produce a preliminary response strategy and a required-information list."
+  ],
+  "agent_id": "acquisition_strategy_agent_target_perspective"
+}

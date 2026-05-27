@@ -1,0 +1,370 @@
+{
+  "agent_name": "Acquisition strategy agent（buyer perspective ）",
+  "perspective": "buyer",
+  "purpose": "Evaluate whether a buyer should pursue, price, structure, and execute an acquisition of a target company, producing an Acquisition Strategy Report from the buyer perspective.",
+  "mode": "multi_step_llm_planner_with_iterative_tool_use",
+  "input_schema": {
+    "required": [
+      "buyer_name_or_profile",
+      "target_name_or_profile",
+      "transaction_context"
+    ],
+    "optional": [
+      "buyer_financials",
+      "target_financials",
+      "industry",
+      "geography",
+      "deal_size_or_budget",
+      "strategic_objectives",
+      "financing_constraints",
+      "uploaded_documents",
+      "valuation_assumptions",
+      "time_horizon",
+      "risk_tolerance"
+    ]
+  },
+  "clarification_questions": [
+    "Who is the buyer and what is its current business model?",
+    "Who is the target and what assets/businesses are included in the proposed transaction?",
+    "What is the buyer's primary acquisition objective: market expansion, technology/IP, customer base, cost synergy, vertical integration, financial return, or other?",
+    "Is there an indicative purchase price, valuation range, or deal structure already proposed?",
+    "What data is available: public filings, financial statements, CIM, management presentation, diligence materials, or only public information?"
+  ],
+  "workflow": [
+    {
+      "step_id": "B1",
+      "name": "Transaction Context",
+      "objective": "Define the transaction perimeter, parties, asset scope, proposed consideration, timing, and decision question.",
+      "tools": [
+        "document_parser",
+        "web_search",
+        "company_profile_lookup",
+        "filing_retriever"
+      ],
+      "analysis_tasks": [
+        "Identify buyer, target, seller, transaction perimeter, geography, sector, deal status.",
+        "Summarize proposed terms if available: price, stake acquired, consideration, conditions, timeline.",
+        "Classify transaction type: strategic acquisition, tuck-in, platform acquisition, distressed acquisition, reverse merger/shell acquisition, asset deal, merger of equals."
+      ],
+      "outputs": [
+        "transaction_summary",
+        "deal_perimeter",
+        "key_unknowns"
+      ]
+    },
+    {
+      "step_id": "B2",
+      "name": "Buyer Objective Definition",
+      "objective": "Translate buyer's high-level intent into measurable acquisition objectives and decision criteria.",
+      "tools": [
+        "llm_reasoner",
+        "strategy_framework_library"
+      ],
+      "analysis_tasks": [
+        "Define strategic rationale: growth, capability acquisition, market entry, customer access, vertical integration, cost synergy, capital market objective.",
+        "Set buyer-specific success metrics: revenue uplift, EBITDA improvement, IRR, payback, market share, capability gap closure.",
+        "Prioritize decision criteria and assign weights."
+      ],
+      "outputs": [
+        "buyer_objective_map",
+        "weighted_decision_criteria",
+        "go_no_go_thresholds"
+      ]
+    },
+    {
+      "step_id": "B3",
+      "name": "Target Business Quality",
+      "objective": "Assess whether the target is fundamentally worth owning.",
+      "tools": [
+        "financial_statement_analyzer",
+        "customer_supplier_analyzer",
+        "news_search",
+        "filing_retriever",
+        "quality_score_model"
+      ],
+      "analysis_tasks": [
+        "Analyze revenue quality, margin profile, customer concentration, retention, recurring vs one-off revenue, working capital intensity.",
+        "Assess management quality, operational resilience, product/service differentiation, litigation or compliance issues.",
+        "Score target business quality using evidence-backed criteria."
+      ],
+      "outputs": [
+        "business_quality_score",
+        "quality_drivers",
+        "red_flags"
+      ]
+    },
+    {
+      "step_id": "B4",
+      "name": "Industry & Competitive Position",
+      "objective": "Evaluate target's external market context and competitive strength.",
+      "tools": [
+        "market_research_search",
+        "competitor_benchmarking",
+        "industry_database",
+        "llm_synthesis"
+      ],
+      "analysis_tasks": [
+        "Determine industry growth, cyclicality, regulatory exposure, fragmentation, disruption risk.",
+        "Benchmark target against peers on scale, growth, margins, valuation, market positioning.",
+        "Identify competitive moat and threats."
+      ],
+      "outputs": [
+        "industry_attractiveness",
+        "competitive_position_score",
+        "peer_benchmark_table"
+      ]
+    },
+    {
+      "step_id": "B5",
+      "name": "Strategic Fit",
+      "objective": "Assess fit between buyer and target, including commercial, operational, technology, geographic, and cultural fit.",
+      "tools": [
+        "synergy_mapper",
+        "capability_gap_matrix",
+        "llm_reasoner"
+      ],
+      "analysis_tasks": [
+        "Map buyer needs to target capabilities/assets.",
+        "Identify revenue synergies, cost synergies, cross-sell potential, integration complexity.",
+        "Assess conflicts: channel overlap, product cannibalization, culture, regulatory or customer issues."
+      ],
+      "outputs": [
+        "strategic_fit_score",
+        "fit_gap_matrix",
+        "synergy_hypotheses"
+      ]
+    },
+    {
+      "step_id": "B6",
+      "name": "Standalone Financial Analysis",
+      "objective": "Build target standalone financial view before synergies.",
+      "tools": [
+        "financial_model",
+        "ratio_analyzer",
+        "forecast_engine",
+        "sensitivity_model"
+      ],
+      "analysis_tasks": [
+        "Normalize historical financials and identify one-off items.",
+        "Analyze revenue growth, gross margin, EBITDA margin, FCF conversion, capex, working capital, leverage.",
+        "Create base/upside/downside standalone forecast."
+      ],
+      "outputs": [
+        "normalized_financials",
+        "standalone_forecast",
+        "sensitivity_cases"
+      ]
+    },
+    {
+      "step_id": "B7",
+      "name": "Valuation & Purchase Price",
+      "objective": "Estimate fair value and buyer's maximum supportable bid.",
+      "tools": [
+        "dcf_model",
+        "trading_comps",
+        "transaction_comps",
+        "premium_analysis",
+        "valuation_bridge"
+      ],
+      "analysis_tasks": [
+        "Run DCF, trading comps, precedent transactions, and premium analysis.",
+        "Compare indicative purchase price to valuation range.",
+        "Calculate buyer walk-away price under standalone and synergy-inclusive cases."
+      ],
+      "outputs": [
+        "valuation_range",
+        "purchase_price_assessment",
+        "max_bid_recommendation"
+      ]
+    },
+    {
+      "step_id": "B8",
+      "name": "Synergies & Value Creation",
+      "objective": "Quantify how buyer can create value after acquisition.",
+      "tools": [
+        "synergy_model",
+        "integration_cost_model",
+        "value_creation_bridge"
+      ],
+      "analysis_tasks": [
+        "Estimate revenue synergies, cost synergies, tax/financing synergies, strategic optionality.",
+        "Estimate timing, probability, execution cost, dis-synergies, and leakage.",
+        "Create value creation bridge from purchase price to buyer value."
+      ],
+      "outputs": [
+        "synergy_case",
+        "integration_costs",
+        "probability_weighted_value_creation"
+      ]
+    },
+    {
+      "step_id": "B9",
+      "name": "Deal Structure",
+      "objective": "Recommend transaction form and key terms that protect buyer value.",
+      "tools": [
+        "deal_structuring_rules",
+        "legal_term_sheet_generator",
+        "risk_allocator"
+      ],
+      "analysis_tasks": [
+        "Evaluate asset purchase vs stock purchase vs merger vs staged acquisition.",
+        "Assess consideration mix: cash, stock, seller note, earnout, contingent value rights.",
+        "Propose protections: reps/warranties, indemnities, escrow, closing conditions, MAC, regulatory conditions."
+      ],
+      "outputs": [
+        "recommended_deal_structure",
+        "key_terms",
+        "risk_allocation"
+      ]
+    },
+    {
+      "step_id": "B10",
+      "name": "Financing & Capital Structure Impact",
+      "objective": "Assess funding feasibility and impact on buyer balance sheet/shareholders.",
+      "tools": [
+        "financing_model",
+        "credit_metrics_model",
+        "accretion_dilution_model"
+      ],
+      "analysis_tasks": [
+        "Evaluate cash, debt, equity, hybrid financing availability.",
+        "Model leverage, liquidity, credit rating, covenant headroom.",
+        "Analyze EPS accretion/dilution and shareholder value impact where relevant."
+      ],
+      "outputs": [
+        "financing_plan",
+        "capital_structure_impact",
+        "accretion_dilution"
+      ]
+    },
+    {
+      "step_id": "B11",
+      "name": "Returns Analysis",
+      "objective": "Determine whether the acquisition meets buyer return thresholds.",
+      "tools": [
+        "irr_model",
+        "payback_model",
+        "scenario_engine"
+      ],
+      "analysis_tasks": [
+        "Calculate IRR, NPV, MOIC, payback period under base/upside/downside cases.",
+        "Run sensitivity to purchase price, synergy realization, growth, margin, exit multiple.",
+        "Compare to buyer hurdle rate and strategic threshold."
+      ],
+      "outputs": [
+        "returns_summary",
+        "scenario_sensitivity",
+        "hurdle_rate_assessment"
+      ]
+    },
+    {
+      "step_id": "B12",
+      "name": "Due Diligence Findings",
+      "objective": "Convert diligence evidence into decision-relevant issues.",
+      "tools": [
+        "document_review",
+        "issue_tracker",
+        "risk_register",
+        "diligence_checklist"
+      ],
+      "analysis_tasks": [
+        "Compile financial, legal, tax, commercial, operational, HR, technology, regulatory diligence findings.",
+        "Tag each issue as valuation adjustment, deal term protection, integration action, or walk-away risk.",
+        "Identify information gaps requiring further diligence."
+      ],
+      "outputs": [
+        "diligence_findings",
+        "issue_log",
+        "required_follow_up"
+      ]
+    },
+    {
+      "step_id": "B13",
+      "name": "Regulatory / Integration / Downside Risk",
+      "objective": "Assess execution risk beyond financial attractiveness.",
+      "tools": [
+        "regulatory_screen",
+        "integration_risk_model",
+        "downside_case_model",
+        "news_litigation_search"
+      ],
+      "analysis_tasks": [
+        "Analyze antitrust, foreign investment, industry licensing, sanctions, and other regulatory risks.",
+        "Assess integration risks: systems, people, customers, operations, culture.",
+        "Build downside case and risk mitigation plan."
+      ],
+      "outputs": [
+        "risk_register",
+        "mitigation_plan",
+        "deal_certainty_score"
+      ]
+    },
+    {
+      "step_id": "B14",
+      "name": "Recommendation",
+      "objective": "Produce buyer-side acquisition strategy recommendation.",
+      "tools": [
+        "llm_report_writer",
+        "evidence_citation_manager",
+        "executive_summary_generator"
+      ],
+      "analysis_tasks": [
+        "Synthesize all modules into pursue / pursue with conditions / pause / reject recommendation.",
+        "State recommended bid range, deal structure, diligence priorities, negotiation position, and next steps.",
+        "Provide confidence score and key assumptions."
+      ],
+      "outputs": [
+        "buyer_acquisition_strategy_report"
+      ]
+    }
+  ],
+  "output_schema": {
+    "report_title": "Buyer Perspective Acquisition Strategy Report",
+    "sections": [
+      "Executive Recommendation",
+      "Transaction Context",
+      "Buyer Objectives",
+      "Target Business Quality",
+      "Industry and Competitive Position",
+      "Strategic Fit",
+      "Standalone Financial Analysis",
+      "Valuation and Purchase Price",
+      "Synergies and Value Creation",
+      "Deal Structure",
+      "Financing and Capital Structure Impact",
+      "Returns Analysis",
+      "Due Diligence Findings",
+      "Regulatory / Integration / Downside Risks",
+      "Negotiation Strategy and Next Steps",
+      "Appendix: Evidence, Assumptions, Data Gaps"
+    ]
+  },
+  "decision_logic": {
+    "recommend_pursue_if": [
+      "strategic_fit_score >= 70",
+      "business_quality_score >= 65",
+      "base_case_irr >= buyer_hurdle_rate",
+      "deal_certainty_score >= 60",
+      "no_unmitigated_walkaway_risk"
+    ],
+    "recommend_conditional_pursue_if": [
+      "value_creation_positive_but_data_gaps_exist",
+      "valuation_attractive_only_with_synergies",
+      "risks_mitigable_through_price_or_terms"
+    ],
+    "recommend_reject_if": [
+      "price_above_walkaway_range",
+      "standalone_business_quality_weak_and_synergies_unproven",
+      "material_regulatory_or_diligence_walkaway_risk",
+      "returns_below_hurdle_even_in_base_case"
+    ]
+  },
+  "guardrails": [
+    "Do not fabricate financials or transaction terms; mark unavailable data explicitly.",
+    "Separate facts, assumptions, and model outputs.",
+    "Cite source for every public-data claim when implemented with search/filing tools.",
+    "Do not give legal, tax, or investment advice as final professional advice; frame as analytical support.",
+    "If critical inputs are missing, produce a preliminary report with data gaps and required next steps."
+  ],
+  "agent_id": "acquisition_strategy_agent_buyer_perspective"
+}
