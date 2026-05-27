@@ -734,11 +734,23 @@ function bindAuditUi() {
   });
 }
 
+function getInitialPerspectiveFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const explicit = params.get('perspective') || params.get('side');
+  const path = window.location.pathname.toLowerCase();
+  if (explicit === 'target' || explicit === 'seller' || path.endsWith('/target.html') || path.endsWith('/seller.html')) return 'target';
+  if (explicit === 'buyer' || path.endsWith('/buyer.html')) return 'buyer';
+  return 'buyer';
+}
+
 async function init() {
+  activePerspective = getInitialPerspectiveFromUrl();
   await ensureReportsLoaded();
   bindAuditUi();
   // 默认显示通用模板，不自动选择案例
-  $('mandateInput').value = 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether BuyerCo should acquire TargetCo. Please assess target quality, strategic fit, valuation, deal structure, financing, risks, and post-close value creation.';
+  $('mandateInput').value = activePerspective === 'target'
+    ? 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether TargetCo should accept, reject, negotiate, run a market check, or pursue alternatives. Please assess standalone value, offer attractiveness, valuation fairness, deal certainty, negotiation strategy, and final recommendation.'
+    : 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether BuyerCo should acquire TargetCo. Please assess target quality, strategic fit, valuation, deal structure, financing, risks, and post-close value creation.';
   renderPerspective();
   setRunButtonState();
 
