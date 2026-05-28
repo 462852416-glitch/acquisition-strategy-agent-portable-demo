@@ -6,18 +6,17 @@
   <title>Acquisition Strategy Agent — Buyer</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+<body data-fixed-perspective="buyer">
   <header class="topbar">
     <div class="brand">Acquisition Strategy Agent</div>
   </header>
 
   <main class="page">
     <section class="card title-card">
-      <div class="title-row">
-        <h1>Acquisition Strategy Agent</h1>
-        <div class="perspective-switch" id="perspectiveSwitch">
-          <button class="switch-btn active" data-perspective="buyer">Buyer Perspective</button>
-          <button class="switch-btn" data-perspective="target">Target Perspective</button>
+      <div class="title-row single-perspective-title">
+        <div>
+          <h1>Buyer Perspective Acquisition Strategy Agent</h1>
+          <p class="page-subtitle">Standalone buyer link. This page is locked to the buyer workflow and does not contain the other perspective.</p>
         </div>
       </div>
     </section>
@@ -32,10 +31,9 @@
       <textarea id="mandateInput" placeholder="Enter transaction brief / decision request..."></textarea>
 
       <div class="test-case-block">
-        <div class="test-case-title">Test cases</div>
+        <div class="test-case-title">Test case</div>
         <div class="test-case-buttons">
           <button class="case-btn" data-case="buyer-apple-darwinai">Apple → DarwinAI · buyer case</button>
-          <button class="case-btn" data-case="target-apple-darwinai">Apple → DarwinAI · target case</button>
           <button class="case-btn active" data-case="blank">Blank template</button>
         </div>
       </div>
@@ -51,7 +49,7 @@
           <span class="step-label">Workflow overview</span>
         </div>
       </div>
-      <img id="workflowImage" class="flowchart-img" src="./assets/buyer-flowchart.jpg" alt="Workflow overview" />
+      <img id="workflowImage" class="flowchart-img" src="./assets/buyer-flowchart.jpg" alt="Buyer workflow overview" />
     </section>
 
     <section class="card planning-card">

@@ -400,8 +400,14 @@ function markdownToHtml(markdown = '') {
   return html;
 }
 
+function getFixedPerspective() {
+  const value = document.body?.dataset?.fixedPerspective;
+  return perspectives[value] ? value : null;
+}
+
 async function ensureReportsLoaded() {
-  const entries = Object.values(perspectives);
+  const fixedPerspective = getFixedPerspective();
+  const entries = fixedPerspective ? [perspectives[fixedPerspective]] : Object.values(perspectives);
   await Promise.all(entries.map(async item => {
     if (!loadedReports[item.key]) {
       const response = await fetch(item.markdownPath, { cache: 'no-store' });
@@ -464,10 +470,12 @@ function runActiveAgent() {
 }
 
 function applyCase(caseKey) {
+  const fixedPerspective = getFixedPerspective();
   const c = testCases[caseKey];
   if (!c) return;
-  activePerspective = c.perspective;
-  $('mandateInput').value = c.text;
+  if (caseKey !== 'blank' && fixedPerspective && c.perspective !== fixedPerspective) return;
+  activePerspective = fixedPerspective || c.perspective;
+  $('mandateInput').value = caseKey === 'blank' ? getBlankTemplate(activePerspective) : c.text;
   document.querySelectorAll('.case-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.case === caseKey));
   renderPerspective();
   setRunButtonState();
@@ -735,6 +743,8 @@ function bindAuditUi() {
 }
 
 function getInitialPerspectiveFromUrl() {
+  const fixedPerspective = getFixedPerspective();
+  if (fixedPerspective) return fixedPerspective;
   const params = new URLSearchParams(window.location.search);
   const explicit = params.get('perspective') || params.get('side');
   const path = window.location.pathname.toLowerCase();
@@ -743,24 +753,30 @@ function getInitialPerspectiveFromUrl() {
   return 'buyer';
 }
 
+function getBlankTemplate(perspective) {
+  return perspective === 'target'
+    ? 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether TargetCo should accept, reject, negotiate, run a market check, or pursue alternatives. Please assess standalone value, offer attractiveness, valuation fairness, deal certainty, negotiation strategy, and final recommendation.'
+    : 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether BuyerCo should acquire TargetCo. Please assess target quality, strategic fit, valuation, deal structure, financing, risks, and post-close value creation.';
+}
+
 async function init() {
   activePerspective = getInitialPerspectiveFromUrl();
   await ensureReportsLoaded();
   bindAuditUi();
-  // 默认显示通用模板，不自动选择案例
-  $('mandateInput').value = activePerspective === 'target'
-    ? 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether TargetCo should accept, reject, negotiate, run a market check, or pursue alternatives. Please assess standalone value, offer attractiveness, valuation fairness, deal certainty, negotiation strategy, and final recommendation.'
-    : 'Buyer: Company A\nTarget: Company B\n\nWe are evaluating whether BuyerCo should acquire TargetCo. Please assess target quality, strategic fit, valuation, deal structure, financing, risks, and post-close value creation.';
+  // 默认显示当前独立页面的通用模板，不自动选择案例
+  $('mandateInput').value = getBlankTemplate(activePerspective);
   renderPerspective();
   setRunButtonState();
 
-  document.querySelectorAll('.switch-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activePerspective = btn.dataset.perspective;
-      renderPerspective();
-      setRunButtonState();
+  if (!getFixedPerspective()) {
+    document.querySelectorAll('.switch-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activePerspective = btn.dataset.perspective;
+        renderPerspective();
+        setRunButtonState();
+      });
     });
-  });
+  }
 
   document.querySelectorAll('.case-btn').forEach(btn => {
     btn.addEventListener('click', () => applyCase(btn.dataset.case));

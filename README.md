@@ -29,17 +29,23 @@ Should the target accept, reject, negotiate, run a market check, or pursue alter
 
 ## UI decision
 
-The first prototype keeps both agents in one page with a perspective switcher. This is better for demo and analyst workflow because the same transaction can be evaluated from buyer and target perspectives without losing shared context. If the product grows, the same specs can later be split into separate routes.
+The public demo is split into separate standalone pages:
+
+- Buyer page: `buyer.html`
+- Seller / target page: `target.html`
+- Root page: `index.html`, a simple selector linking to the two standalone pages
+
+Each standalone page is locked to its own perspective, workflow, test case, flowchart, and report. There is no in-page buyer/target switch.
 
 ## Portable prototype
 
-Run the local server to view the one-page dual-perspective demo with embedded XBRL audit:
+Run the local server to view the standalone pages with embedded XBRL audit support:
 
 ```bash
 python3 server.py
 ```
 
-Then open `http://127.0.0.1:8123`.
+Then open `http://127.0.0.1:8123/buyer.html` or `http://127.0.0.1:8123/target.html`.
 
 The report UI contains figure-level `XBRL` buttons. These call the embedded `/api/xbrl-audit` endpoint in this same app, so the old standalone `localhost:8010` XBRL demo is no longer required.
 

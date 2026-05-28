@@ -3,21 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Acquisition Strategy Agent — Target</title>
+  <title>Acquisition Strategy Agent — Target / Seller</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+<body data-fixed-perspective="target">
   <header class="topbar">
     <div class="brand">Acquisition Strategy Agent</div>
   </header>
 
   <main class="page">
     <section class="card title-card">
-      <div class="title-row">
-        <h1>Acquisition Strategy Agent</h1>
-        <div class="perspective-switch" id="perspectiveSwitch">
-          <button class="switch-btn active" data-perspective="buyer">Buyer Perspective</button>
-          <button class="switch-btn" data-perspective="target">Target Perspective</button>
+      <div class="title-row single-perspective-title">
+        <div>
+          <h1>Target / Seller Perspective Acquisition Strategy Agent</h1>
+          <p class="page-subtitle">Standalone target / seller link. This page is locked to the target / seller workflow and does not contain the other perspective.</p>
         </div>
       </div>
     </section>
@@ -32,10 +31,9 @@
       <textarea id="mandateInput" placeholder="Enter transaction brief / decision request..."></textarea>
 
       <div class="test-case-block">
-        <div class="test-case-title">Test cases</div>
+        <div class="test-case-title">Test case</div>
         <div class="test-case-buttons">
-          <button class="case-btn" data-case="buyer-apple-darwinai">Apple → DarwinAI · buyer case</button>
-          <button class="case-btn" data-case="target-apple-darwinai">Apple → DarwinAI · target case</button>
+          <button class="case-btn" data-case="target-apple-darwinai">Apple → DarwinAI · target / seller case</button>
           <button class="case-btn active" data-case="blank">Blank template</button>
         </div>
       </div>
@@ -51,14 +49,14 @@
           <span class="step-label">Workflow overview</span>
         </div>
       </div>
-      <img id="workflowImage" class="flowchart-img" src="./assets/buyer-flowchart.jpg" alt="Workflow overview" />
+      <img id="workflowImage" class="flowchart-img" src="./assets/target-flowchart.jpg" alt="Target / Seller workflow overview" />
     </section>
 
     <section class="card planning-card">
       <div class="section-head compact">
         <div>
           <span class="step-label">Planning</span>
-          <h2 id="planningTitle">Buyer-side planning & clarification</h2>
+          <h2 id="planningTitle">Target-side planning & clarification</h2>
         </div>
       </div>
       <div id="planningOutput" class="planning-output"></div>
@@ -68,7 +66,7 @@
       <div class="section-head compact">
         <div>
           <span class="step-label">Tool loop</span>
-          <h2 id="workflowTitle">Buyer workflow modules</h2>
+          <h2 id="workflowTitle">Target / seller workflow modules</h2>
         </div>
       </div>
       <div id="workflowList" class="workflow-list"></div>
@@ -78,11 +76,11 @@
       <div class="section-head compact report-head">
         <div>
           <span class="step-label">Output report</span>
-          <h2 id="reportTitle">Apple acquisition of DarwinAI — Buyer Perspective Acquisition Strategy Report</h2>
+          <h2 id="reportTitle">Apple acquisition of DarwinAI — Target Perspective Acquisition Strategy Report</h2>
         </div>
         <div class="report-actions">
-          <a id="openMarkdownLink" href="./reports/apple_darwinai_buyer_report.md" target="_blank">View Markdown</a>
-          <a id="downloadPdfLink" href="./reports/apple_darwinai_buyer_report.pdf" target="_blank" download>Download PDF Report</a>
+          <a id="openMarkdownLink" href="./reports/apple_darwinai_target_report.md" target="_blank">View Markdown</a>
+          <a id="downloadPdfLink" href="./reports/apple_darwinai_target_report.pdf" target="_blank" download>Download PDF Report</a>
         </div>
       </div>
       <div id="reportBody" class="report-body"></div>
